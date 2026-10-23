@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#070914">
+  <meta name="description" content="NEXO: aprende, explora e investiga con fuentes académicas.">
+  <title>NEXO — Conocimiento sin límites</title>
+
+  <style>
+    :root {
+      --bg: #070914;
+      --panel: #11172b;
+      --cyan: #65f5ff;
+      --violet: #a48bff;
+      --pink: #fa8bff;
+      --white: #f4f7ff;
+      --muted: #9da9c6;
+      --border: #ffffff20;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 90px;
+    }
+
+    body {
+      margin: 0;
+      color: var(--white);
+      background:
+        radial-gradient(ellipse at 20% 0%, #24366a66, transparent 45%),
+        radial-gradient(ellipse at 100% 35%, #4b1e6540, transparent 35%),
+        var(--bg);
+      font-family: Inter, system-ui, -apple-system, sans-serif;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      opacity: .2;
+      background-image:
+        linear-gradient(#a6c4ff12 1px, transparent 1px),
+        linear-gradient(90deg, #a6c4ff12 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    a { color: var(--cyan); }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+
+    .wrap {
+      width: min(1120px, 92%);
+      margin: auto;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: #070914eF;
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .navbar {
+      min-height: 74px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .brand {
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 950;
+      font-size: 1.5rem;
+      letter-spacing: 5px;
+    }
+
+    .brand span { color: var(--cyan); }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }
+
+    nav a {
+      color: #c4cce0;
+      text-decoration: none;
+      font-size: .85rem;
+    }
+
+    nav a:hover { color: var(--cyan); }
+
+    .nav-button {
+      border: 1px solid #65f5ff70;
+      padding: 10px 13px;
+      border-radius: 10px;
+    }
+
+    .hero {
+      min-height: 560px;
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      align-items: center;
+      gap: 25px;
+      padding: 65px 0;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      border: 1px solid #65f5ff50;
+      color: var(--cyan);
+      background: #65f5ff0b;
+      padding: 9px 13px;
+      border-radius: 30px;
+      font-size: .72rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      line-height: 1;
+      letter-spacing: -4px;
+      margin: 25px 0 20px;
+    }
+
+    .gradient {
+      background: linear-gradient(100deg, var(--cyan), #a7a3ff, var(--pink));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .lead {
+      max-width: 570px;
+      color: #aeb9d2;
+      line-height: 1.8;
+    }
+
+    .searchbox {
+      display: flex;
+      gap: 10px;
+      margin: 27px 0 15px;
+    }
+
+    .searchbox input {
+      min-width: 0;
+      flex: 1;
+      padding: 16px;
+      border: 1px solid #66739970;
+      border-radius: 13px;
+      outline: none;
+      background: #0d1223;
+      color: white;
+    }
+
+    input:focus { border-color: var(--cyan); }
+
+    .btn {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      color: #07101a;
+      font-weight: 850;
+      background: linear-gradient(110deg, var(--cyan), #aaa2ff);
+      transition: .2s;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.1);
+    }
+
+    .btn:disabled {
+      opacity: .6;
+      cursor: wait;
+    }
+
+    .suggestions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: .8rem;
+    }
+
+    .chip {
+      padding: 7px 11px;
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      background: #ffffff08;
+      color: #dbe4fa;
+      font-size: .78rem;
+    }
+
+    .chip:hover {
+      color: var(--cyan);
+      border-color: var(--cyan);
+    }
+
+    .hero-art {
+      display: grid;
+      place-items: center;
+      min-height: 360px;
+      position: relative;
+    }
+
+    .orb {
+      width: min(320px, 75vw);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      position: relative;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(circle, #a48bff24, transparent 65%);
+      animation: float 5s ease-in-out infinite;
+    }
+
+    .ring {
+      position: absolute;
+      inset: 5%;
+      border: 1px solid #65f5ff70;
+      border-radius: 50%;
+      box-shadow: 0 0 35px #65f5ff12;
+    }
+
+    .ring.two {
+      inset: 15%;
+      border-color: #a48bff90;
+      transform: rotateX(65deg) rotateZ(-25deg);
+    }
+
+    .ring.three {
+      inset: 12%;
+      border-color: #fa8bff70;
+      transform: rotateY(65deg) rotateZ(25deg);
+    }
+
+    .core {
+      width: 42%;
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      transform: rotate(45deg);
+      border-radius: 25%;
+      border: 1px solid var(--cyan);
+      background: linear-gradient(135deg, #132b4b, #251b4a);
+      box-shadow: 0 0 50px #65f5ff30;
+    }
+
+    .core span {
+      transform: rotate(-45deg);
+      font-size: 4rem;
+      font-weight: 950;
+      color: var(--cyan);
+      text-shadow: 0 0 25px var(--cyan);
+    }
+
+    .float-card {
+      position: absolute;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #11182beF;
+      box-shadow: 0 10px 35px #0005;
+      font-size: .8rem;
+    }
+
+    .float-card small {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+    }
+
+    .fc1 { top: 10%; right: 0; }
+    .fc2 { bottom: 10%; left: 0; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      padding: 23px 0;
+      border-block: 1px solid var(--border);
+    }
+
+    .stat {
+      padding: 0 20px;
+      border-right: 1px solid var(--border);
+    }
+
+    .stat:first-child { padding-left: 0; }
+    .stat:last-child { border: 0; }
+    .stat strong { display: block; }
+    .stat span { color: var(--muted); font-size: .78rem; }
+
+    section { padding: 48px 0; }
+
+    .kicker {
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: .72rem;
+      font-weight: 850;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: clamp(1.7rem, 4vw, 2.5rem);
+      letter-spacing: -1px;
+    }
+
+    .section-desc {
+      max-width: 700px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 15px;
+    }
+
+    .topic {
+      padding: 23px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: linear-gradient(145deg, #151d34, #0d1222);
+      transition: .2s;
+    }
+
+    .topic:hover {
+      transform: translateY(-4px);
+      border-color: #65f5ff70;
+    }
+
+    .topic-icon {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border: 1px solid #65f5ff35;
+      border-radius: 14px;
+      background: #65f5ff0e;
+      font-size: 1.5rem;
+    }
+
+    .topic h3 { margin: 17px 0 9px; }
+    .topic p {
+      color: var(--muted);
+      font-size: .86rem;
+      line-height: 1.7;
+    }
+
+    .text-btn {
+      color: var(--cyan);
+      border: 0;
+      padding: 0;
+      background: transparent;
+      font-weight: 800;
+    }
+
+    .workbench {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .panel {
+      padding: 25px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: linear-gradient(145deg, #171c36, #0d1120);
+    }
+
+    .nova-title {
+      font-size: 1.7rem;
+      font-weight: 950;
+      letter-spacing: 2px;
+    }
+
+    .nova-title span { color: var(--cyan); }
+
+    .online {
+      color: #8cf5c6;
+      font-size: .75rem;
+    }
+
+    .panel p {
+      color: var(--muted);
+      line-height: 1.75;
+      font-size: .88rem;
+    }
+
+    .nova-form {
+      display: flex;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .nova-form input {
+      min-width: 0;
+      flex: 1;
+      padding: 13px;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      background: #090e1c;
+      color: white;
+    }
+
+    .fineprint {
+      border-top: 1px solid var(--border);
+      padding-top: 13px;
+      font-size: .75rem !important;
+    }
+
+    .source-links {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+      margin-top: 20px;
+    }
+
+    .source-link {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 13px;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      color: #dbe4fa;
+      text-decoration: none;
+      font-size: .8rem;
+    }
+
+    .source-link:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    .results {
+      display: grid;
+      gap: 13px;
+    }
+
+    .status {
+      padding: 20px;
+      border: 1px dashed #ffffff40;
+      border-radius: 13px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .result {
+      padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      background: #0e1426;
+      overflow-wrap: anywhere;
+    }
+
+    .result h3 {
+      font-size: 1rem;
+      line-height: 1.5;
+      margin: 0 0 10px;
+    }
+
+    .meta {
+      color: #c3cde3;
+      font-size: .78rem;
+      line-height: 1.8;
+    }
+
+    .result p {
+      color: var(--muted);
+      font-size: .83rem;
+      line-height: 1.65;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 5px 9px;
+      border: 1px solid #36526c;
+      border-radius: 30px;
+      color: #a8f4ff;
+      font-size: .7rem;
+      margin: 5px 5px 0 0;
+    }
+
+    .result-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 14px;
+      font-size: .8rem;
+    }
+
+    .note {
+      padding: 15px;
+      margin-top: 15px;
+      border: 1px solid #e7b96b45;
+      border-radius: 12px;
+      color: #d6c8aa;
+      background: #e7b96b0b;
+      font-size: .78rem;
+      line-height: 1.7;
+    }
+
+    footer {
+      margin-top: 30px;
+      padding: 28px 0;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: .8rem;
+      line-height: 1.8;
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    @media (max-width: 800px) {
+      .hero { grid-template-columns: 1fr; text-align: center; }
+      .lead { margin-inline: auto; }
+      .suggestions { justify-content: center; }
+      .hero-art { min-height: 310px; }
+      .orb { width: 270px; }
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .workbench { grid-template-columns: 1fr; }
+      nav { gap: 12px; }
+      nav a:not(.nav-button) { display: none; }
+    }
+
+    @media (max-width: 520px) {
+      .wrap { width: 90%; }
+      .hero { padding: 40px 0; }
+      h1 { font-size: 3.2rem; letter-spacing: -2px; }
+      .searchbox { flex-direction: column; }
+      .searchbox .btn { width: 100%; }
+      .grid { grid-template-columns: 1fr; }
+      .stats { gap: 7px; }
+      .stat { padding: 0 9px; }
+      .stat strong { font-size: .85rem; }
+      .stat span { font-size: .68rem; }
+      .nova-form { flex-direction: column; }
+      .nova-form .btn { width: 100%; }
+      .panel { padding: 19px; }
+      .orb { width: 235px; }
+      .float-card { font-size: .7rem; padding: 9px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="navbar wrap">
+    <a class="brand" href="#inicio">N<span>.</span>EXO</a>
+    <nav aria-label="Navegación principal">
+      <a href="#explorar">Explorar</a>
+      <a href="#nova">NOVA</a>
+      <a href="#biblioteca">Biblioteca</a>
+      <a class="nav-button" href="#biblioteca">Investigar ↗</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero" id="inicio">
+    <div>
+      <div class="eyebrow">✦ Tu universo de conocimiento</div>
+      <h1>El futuro del<br>aprendizaje es<br><span class="gradient">ahora.</span></h1>
+      <p class="lead">
+        Explora ideas, conecta conceptos y descubre investigaciones.
+        Un espacio educativo donde tu curiosidad marca el camino.
+      </p>
+
+      <form class="searchbox" id="searchForm">
+        <input id="query" type="search"
+          placeholder="¿Qué quieres descubrir hoy?"
+          aria-label="Buscar publicaciones académicas" required>
+        <button class="btn" id="searchBtn" type="submit">Investigar ↗</button>
+      </form>
+
+      <div class="suggestions">
+        <span>Prueba:</span>
+        <button class="chip" data-q="inteligencia artificial">IA</button>
+        <button class="chip" data-q="placas tectónicas de Panamá">Panamá</button>
+        <button class="chip" data-q="agricultura sostenible">Agricultura</button>
+        <button class="chip" data-q="exploración espacial">Espacio</button>
+      </div>
+    </div>
+
+    <div class="hero-art" aria-label="Ilustración futurista de NEXO">
+      <div class="orb">
+        <div class="ring"></div>
+        <div class="ring two"></div>
+        <div class="ring three"></div>
+        <div class="core"><span>N</span></div>
+      </div>
+      <div class="float-card fc1">
+        ✧ Ideas conectadas
+        <small>Una pregunta abre mil caminos</small>
+      </div>
+      <div class="float-card fc2">
+        ⌘ Explora sin límites
+        <small>Conocimiento multidisciplinario</small>
+      </div>
+    </div>
+  </section>
+
+  <div class="stats">
+    <div class="stat">
+      <strong>01 / Explora</strong>
+      <span>Descubre nuevos temas</span>
+    </div>
+    <div class="stat">
+      <strong>02 / Investiga</strong>
+      <span>Encuentra publicaciones</span>
+    </div>
+    <div class="stat">
+      <strong>03 / Comprueba</strong>
+      <span>Consulta las fuentes originales</span>
+    </div>
+  </div>
+
+  <section id="explorar">
+    <div class="kicker">Un mundo de posibilidades</div>
+    <h2>¿Qué te gustaría descubrir?</h2>
+    <p class="section-desc">
+      No tienes que elegir una sola materia. Sigue tu curiosidad
+      y salta de una idea a otra.
+    </p>
+
+    <div class="grid">
+      <article class="topic">
+        <div class="topic-icon">⚛️</div>
+        <h3>Ciencia y universo</h3>
+        <p>Desde las células y los ecosistemas hasta las galaxias y las leyes de la física.</p>
+        <button class="text-btn" data-q="ciencia universo física y descubrimientos">
+          Explorar esta área ↗
+        </button>
+      </article>
+
+      <article class="topic">
+        <div class="topic-icon">⌘</div>
+        <h3>Tecnología y futuro</h3>
+        <p>Inteligencia artificial, robótica, programación e inventos que transforman el mundo.</p>
+        <button class="text-btn" data-q="inteligencia artificial robótica y nuevas tecnologías">
+          Explorar esta área ↗
+        </button>
+      </article>
+
+      <article class="topic">
+        <div class="topic-icon">🌎</div>
+        <h3>Historia y sociedad</h3>
+        <p>Conoce culturas, civilizaciones, geografía e idiomas.</p>
+        <button class="text-btn" data-q="historia mundial y culturas de América Latina">
+          Explorar esta área ↗
+        </button>
+      </article>
+
+      <article class="topic">
+        <div class="topic-icon">🌱</div>
+        <h3>Planeta y agricultura</h3>
+        <p>Suelos, cultivos, biodiversidad, clima y soluciones sostenibles.</p>
+        <button class="text-btn" data-q="agricultura sostenible y conservación del suelo">
+          Explorar esta área ↗
+        </button>
+      </article>
+
+      <article class="topic">
+        <div class="topic-icon">🧠</div>
+        <h3>Mente y aprendizaje</h3>
+        <p>Psicología, cerebro y la ciencia detrás de cómo aprendemos.</p>
+        <button class="text-btn" data-q="neurociencia y psicología del aprendizaje">
+          Explorar esta área ↗
+        </button>
+      </article>
+
+      <article class="topic">
+        <div class="topic-icon">🎨</div>
+        <h3>Arte e ideas</h3>
+        <p>Diseño, música, literatura y creatividad.</p>
+        <button class="text-btn" data-q="arte música literatura y creatividad">
+          Explorar esta área ↗
+        </button>
+      </article>
+    </div>
+  </section>
+
+  <section id="nova">
+    <div class="kicker">Tu copiloto de investigación</div>
+    <h2>Conoce a <span class="gradient">NOVA</span></h2>
+    <p class="section-desc">
+      Convierte tus preguntas en búsquedas académicas y encuentra
+      fuentes que puedas revisar.
+    </p>
+
+    <div class="workbench">
+      <div class="panel">
+        <div class="nova-title">✧ NOVA <span>/ AI</span></div>
+        <div class="online">● Módulo de investigación activo</div>
+        <h3>La curiosidad empieza con una pregunta.</h3>
+        <p>
+          Escribe lo que quieres investigar. NOVA buscará publicaciones
+          relacionadas y te llevará a los registros académicos.
+        </p>
+
+        <form class="nova-form" id="novaForm">
+          <input id="novaQuestion"
+            placeholder="Ej. ¿Cómo afectan las placas a Panamá?"
+            aria-label="Pregunta para NOVA" required>
+          <button class="btn" type="submit">Buscar ↗</button>
+        </form>
+
+        <p class="fineprint">
+          Esta versión de NOVA busca publicaciones académicas.
+          Todavía no es un chatbot de IA generativa ni verifica
+          automáticamente la veracidad de cada artículo.
+        </p>
+      </div>
+
+      <div class="panel">
+        <div class="kicker">Fuentes para investigar</div>
+        <h3>Ve directo a los catálogos</h3>
+        <p>
+          Consulta estas plataformas académicas y revisa los datos
+          de la publicación original antes de citarla.
+        </p>
+
+        <div class="source-links">
+          <a class="source-link" href="https://scholar.google.com/" target="_blank" rel="noopener noreferrer">Google Académico ↗</a>
+          <a class="source-link" href="https://pubmed.ncbi.nlm.nih.gov/" target="_blank" rel="noopener noreferrer">PubMed ↗</a>
+          <a class="source-link" href="https://www.scielo.org/" target="_blank" rel="noopener noreferrer">SciELO ↗</a>
+          <a class="source-link" href="https://doaj.org/" target="_blank" rel="noopener noreferrer">DOAJ ↗</a>
+          <a class="source-link" href="https://search.crossref.org/" target="_blank" rel="noopener noreferrer">Crossref ↗</a>
+          <a class="source-link" href="https://openalex.org/" target="_blank" rel="noopener noreferrer">OpenAlex ↗</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="biblioteca">
+    <div class="kicker">Exploración en línea</div>
+    <h2>Biblioteca de investigaciones</h2>
+    <p class="section-desc">
+      Busca trabajos académicos por tema. Abre cada registro para
+      consultar la publicación, los autores y los detalles disponibles.
+    </p>
+
+    <div class="results" id="results" aria-live="polite">
+      <div class="status">
+        Tu biblioteca está lista. Busca un tema en la parte superior
+        o elige una categoría para empezar.
+      </div>
+    </div>
+
+    <div class="note">
+      Importante: los resultados se obtienen de OpenAlex. Que un trabajo
+      aparezca en un catálogo no garantiza que haya pasado por revisión
+      por pares n
